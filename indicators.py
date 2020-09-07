@@ -1,3 +1,4 @@
+# @title technical indicators
 """
 Copyright, Rinat Maksutov, 2017.
 License: GNU General Public License
@@ -38,11 +39,11 @@ Returns:
 def macd(data, period_long=26, period_short=12, period_signal=9, column='<CLOSE>'):
     remove_cols = []
     if not 'ema' + str(period_long) in data.columns:
-        data = ema(data, period_long)
+        data = ema(data, period_long, column=column)
         remove_cols.append('ema' + str(period_long))
 
     if not 'ema' + str(period_short) in data.columns:
-        data = ema(data, period_short)
+        data = ema(data, period_short, column=column)
         remove_cols.append('ema' + str(period_short))
 
     data['macd_val'] = data['ema' + str(period_short)] - data['ema' + str(period_long)]
@@ -232,7 +233,7 @@ def chaikin_oscillator(data, periods_short=3, periods_long=10, high_col='<HIGH>'
         else:
             val = val_last
         ac.set_value(index, val)
-	val_last = val
+        val_last = val
 
     ema_long = ac.ewm(ignore_na=False, min_periods=0, com=periods_long, adjust=True).mean()
     ema_short = ac.ewm(ignore_na=False, min_periods=0, com=periods_short, adjust=True).mean()
